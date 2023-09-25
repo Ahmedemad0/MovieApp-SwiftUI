@@ -5,14 +5,14 @@
 //  Created by Ahmed Emad on 24/09/2023.
 //
 
-import Foundation
+import SwiftUI
 import Combine
 
 protocol ViewModel: AnyObject {
     associatedtype Input
     associatedtype OutPut
 }
-protocol HomeViewModelProtocol {
+protocol HomeViewModelProtocol: ObservableObject {
     var input: HomeViewModel.Input {get}
     var output: HomeViewModel.OutPut {get}
     func viewDidLoad()
@@ -25,23 +25,21 @@ class HomeViewModel: ObservableObject, HomeViewModelProtocol, ViewModel {
         var searchText: String = ""
     }
     
-    class OutPut {
+    class OutPut { }
         @Published var trendingMovies: [TrendingMovieItem] = []
         @Published var searchMovies: [TrendingMovieItem] = []
-    }
-    
+//    }
     var input: Input = .init()
     var output: OutPut = .init()
     var anyCancellable = Set<AnyCancellable>()
     let useCases: HomeUseCases
     
-    init(useCases: HomeUseCases) {
+    init(useCases: HomeUseCases = HomeUseCases()) {
         self.useCases = useCases
     }
     
     func viewDidLoad() {
         callTrendingMovies()
-        searchMovies(searchText: input.searchText)
     }
     
     func callTrendingMovies(){
@@ -49,7 +47,7 @@ class HomeViewModel: ObservableObject, HomeViewModelProtocol, ViewModel {
             .sink { finished in
                 print(finished)
             } receiveValue: {[unowned self] movies in
-                self.output.trendingMovies = movies.result
+                self.trendingMovies = movies.results
             }.store(in: &anyCancellable)
     }
     
@@ -58,7 +56,9 @@ class HomeViewModel: ObservableObject, HomeViewModelProtocol, ViewModel {
             .sink { finished in
                 print(finished)
             } receiveValue: {[unowned self] searchMovies in
-                self.output.searchMovies = searchMovies.result
+                self.searchMovies = searchMovies.results
+                print(searchMovies)
+                
             }.store(in: &anyCancellable)
     }
 }

@@ -9,45 +9,61 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @StateObject var viewModel =  HomeViewModel(useCases: HomeUseCases())
     @State var searchText = ""
+    @ObservedObject var viewModel: HomeViewModel
+
+    init(viewModel: HomeViewModel = HomeViewModel()) {
+        self.viewModel = viewModel
+    }
     var body: some View {
         NavigationStack {
             ScrollView {
-                if viewModel.output.trendingMovies.isEmpty {
-                    HStack {
-                        Spacer()
-                        Text("NO Movies")
-                            .foregroundColor(.white)
-                            .fontWeight(.heavy)
-                        Spacer()
+                if searchText.count < 2 {
+                    if viewModel.trendingMovies.isEmpty {
+                        HStack {
+                            Spacer()
+                            Text("NO Movies")
+                                .foregroundColor(.white)
+                                .fontWeight(.heavy)
+                            Spacer()
+                        }
+                    }else {
+                        HStack {
+                            Text("Trending")
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .fontWeight(.heavy)
+                            Spacer()
+                        }
+                        .padding(.horizontal)
+                        
+                        ScrollView(.horizontal, showsIndicators: false){
+                            HStack {
+                                ForEach(viewModel.trendingMovies) { movie in
+                                    TrendingCardView(trendingMovie: movie)
+                                }
+                            }
+                            .padding()
+                        }
                     }
                 }else {
-                    HStack {
-                        Text("Trending")
-                            .font(.title)
-                            .foregroundColor(.white)
-                            .fontWeight(.heavy)
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                    
                     ScrollView(.horizontal, showsIndicators: false){
-                        HStack {
-                            ForEach(viewModel.output.trendingMovies) { movie in
-                                TrendingCardView(trendingMovie: movie)
+                        VStack {
+                            ForEach(viewModel.searchMovies) { movie in
+                                SearchMovieCardView(movie: movie)
                             }
                         }
                         .padding()
                     }
                 }
+
             }
             .background(Color(red: 39/255, green: 40/255, blue: 59/255).ignoresSafeArea())
         }
         .searchable(text: $searchText)
         .onChange(of: searchText, perform: { newValue in
             if newValue.count > 1 {
-                viewModel.input.searchText = newValue
+                viewModel.searchMovies(searchText: newValue)
             }
         })
         .onAppear{

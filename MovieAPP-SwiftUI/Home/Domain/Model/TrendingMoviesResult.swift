@@ -10,5 +10,5 @@ import Foundation
 struct TrendingMoviesResult: Codable {
     
     let page: Int
-    let result: [TrendingMovieItem]
+    let results: [TrendingMovieItem]
 }

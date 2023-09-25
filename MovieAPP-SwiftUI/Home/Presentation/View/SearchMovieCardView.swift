@@ -9,11 +9,11 @@ import SwiftUI
 
 struct SearchMovieCardView: View {
     
-    let trendingMovie: TrendingMovieItem
+    let movie: TrendingMovieItem
 
     var body: some View {
         HStack {
-            AsyncImage(url: trendingMovie.backDropURL) { image in
+            AsyncImage(url: movie.backDropURL) { image in
                 image
                     .resizable()
                     .scaledToFill()
@@ -25,12 +25,12 @@ struct SearchMovieCardView: View {
             .clipped()
             .cornerRadius(6)
             VStack(alignment: .leading) {
-                Text(trendingMovie.title)
+                Text(movie.title)
                     .foregroundColor(.white)
                     .font(.headline)
                 HStack {
                     Image(systemName: "hand.thumbsup.fill")
-                    Text(String(format: "%.1f", trendingMovie.vote_average))
+                    Text(String(format: "%.1f", movie.vote_average))
                     Spacer()
                 }
                 .foregroundColor(.yellow)

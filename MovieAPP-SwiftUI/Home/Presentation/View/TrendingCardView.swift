@@ -20,8 +20,7 @@ struct TrendingCardView: View {
                     .scaledToFill()
                     .frame(width: 340, height: 280)
             } placeholder: {
-                Rectangle()
-                    .fill(Color(red: 39/255, green: 40/255, blue: 59/255))
+                ProgressView()
                     .frame(width: 340, height: 280)
             }
             
@@ -30,6 +29,7 @@ struct TrendingCardView: View {
                     Text(trendingMovie.title)
                         .foregroundColor(.white)
                         .fontWeight(.heavy)
+                    Spacer()
                     Image(systemName: "heart.fill")
                         .foregroundColor(.red)
                 }
@@ -42,7 +42,7 @@ struct TrendingCardView: View {
                 .fontWeight(.heavy)
             }
             .padding()
-            .foregroundColor(Color(red: 61/255, green: 61/255, blue: 88/255))
+            .background(Color(red: 61/255, green: 61/255, blue: 88/255, opacity: 0.6))
         }
         .cornerRadius(12)
     }
