@@ -8,29 +8,15 @@
 import SwiftUI
 import Combine
 
-protocol ViewModel: AnyObject {
-    associatedtype Input
-    associatedtype OutPut
-}
-protocol HomeViewModelProtocol: ObservableObject {
-    var input: HomeViewModel.Input {get}
-    var output: HomeViewModel.OutPut {get}
-    func viewDidLoad()
-}
 
-class HomeViewModel: ObservableObject, HomeViewModelProtocol, ViewModel {
+class HomeViewModel: ObservableObject, HomeViewModelType {
     
     
-    class Input {
-        var searchText: String = ""
-    }
-    
-    class OutPut { }
-        @Published var trendingMovies: [TrendingMovieItem] = []
-        @Published var searchMovies: [TrendingMovieItem] = []
-//    }
-    var input: Input = .init()
-    var output: OutPut = .init()
+
+    @Published var trendingMovies: [TrendingMovieItem] = []
+    @Published var searchMovies: [TrendingMovieItem] = []
+
+
     var anyCancellable = Set<AnyCancellable>()
     let useCases: HomeUseCases
     

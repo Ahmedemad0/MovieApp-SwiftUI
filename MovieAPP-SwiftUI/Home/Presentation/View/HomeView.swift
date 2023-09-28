@@ -10,14 +10,15 @@ import SwiftUI
 struct HomeView: View {
     
     @State var searchText = ""
-    @ObservedObject var viewModel: HomeViewModel
-
-    init(viewModel: HomeViewModel = HomeViewModel()) {
-        self.viewModel = viewModel
-    }
+    @StateObject var viewModel = HomeViewModel()
+    @EnvironmentObject private var coordinator: Coordinator
+    
     var body: some View {
         NavigationStack {
             ScrollView {
+                Button("push") {
+                    coordinator.push(.details)
+                }
                 if searchText.count < 2 {
                     if viewModel.trendingMovies.isEmpty {
                         HStack {
@@ -37,17 +38,20 @@ struct HomeView: View {
                         }
                         .padding(.horizontal)
                         
-                        ScrollView(.horizontal, showsIndicators: false){
+                        ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
                                 ForEach(viewModel.trendingMovies) { movie in
-                                    TrendingCardView(trendingMovie: movie)
+                                    // MARK: - Need Some Refacoring
+                                    NavigationLink(destination: MovieDetailsView(movieDetails: movie)) {
+                                        TrendingCardView(trendingMovie: movie)
+                                    }
                                 }
                             }
                             .padding()
                         }
                     }
                 }else {
-                    ScrollView(.horizontal, showsIndicators: false){
+                    ScrollView(.vertical, showsIndicators: false){
                         VStack {
                             ForEach(viewModel.searchMovies) { movie in
                                 SearchMovieCardView(movie: movie)

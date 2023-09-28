@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct MovieAPP_SwiftUIApp: App {
+
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            CoordinatorView()
         }
     }
 }
